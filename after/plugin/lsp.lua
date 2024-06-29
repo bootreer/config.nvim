@@ -1,7 +1,7 @@
-local lspconfig = require("lspconfig")
 local cmp = require("cmp")
-local cmp_select_opts = { behavior = cmp.SelectBehavior.Select }
 local luasnip = require("luasnip")
+local lspconfig = require("lspconfig")
+local cmp_select_opts = { behavior = cmp.SelectBehavior.Select }
 
 require("mason").setup()
 
@@ -29,10 +29,6 @@ cmp.setup({
         --     end
         -- end, { "i", "s" }),
 
-        -- jumping between snippet positions is on a different keybind
-        -- because otherwise it would jump to previous snippet positions
-        -- when trying to just write a tab somewhere else
-
         ["<C-l>"] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
@@ -57,101 +53,47 @@ cmp.setup({
     preselect = cmp.PreselectMode.Item, -- set to cmp.PreselectMode.None to disable preselect
 })
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-lspconfig.clangd.setup({
-    capabilities = capabilities,
-})
-
-lspconfig.ocamllsp.setup({
-    capabilities = capabilities,
-})
-
-lspconfig.lua_ls.setup({
-    capabilities = capabilities,
-})
-
-lspconfig.typst_lsp.setup({
-    capabilities = capabilities,
-    settings = {
-        exportPdf = "never",
-    },
-})
-
-lspconfig.zls.setup({
-    capabilities = capabilities,
-})
-
-lspconfig.html.setup({
-    capabilities = capabilities,
-})
-
-lspconfig.tsserver.setup({
-    capabilities = capabilities,
-})
-
-lspconfig.jsonls.setup({
-    capabilities = capabilities,
-})
-
 require('isabelle-lsp').setup({
     isabelle_path = '/Users/tuomas/isabelle-lsp/nvim/bin/isabelle',
 })
 
-lspconfig.isabelle.setup({
-    capabilities = capabilities,
-})
+-- idk
+-- local c = vim.lsp.protocol.make_client_capabilities()
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-local group = vim.api.nvim_create_augroup("clangd_extensions", {
-    clear = true,
-})
+local servers = {
+    lua_ls = true,
+    jsonls = true,
+    html = true,
+    typst_lsp = {
+        settings = {
+            exportPdf = "never",
+        }
+    },
+    tsserver = true,
+    isabelle = true,
+    ocamllsp = {
+        settings = {
+            codelens = { enable = true },
+            inlayHints = { enable = true },
+        },
+    },
 
-vim.api.nvim_create_autocmd("Filetype", {
-    group = group,
-    desc = "Setup clangd_extensions scores for cmp",
-    pattern = "c,cpp,h,hpp,cc",
-    callback = function()
-        cmp.setup.buffer({
-            sorting = {
-                comparators = {
-                    cmp.config.compare.offset,
-                    cmp.config.compare.exact,
-                    cmp.config.compare.recently_used,
-                    require("clangd_extensions.cmp_scores"),
-                    cmp.config.compare.kind,
-                    cmp.config.compare.sort_text,
-                    cmp.config.compare.length,
-                    cmp.config.compare.order,
-                },
-            },
-        })
-    end,
-})
+    clangd = true,
+    zls = true,
+    -- rust_analyzer = true,
+}
 
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = group,
-    desc = "Setup clangd_extension keymap for cmp",
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client == nil or client.name ~= "clangd" then
-            return
-        end
-        vim.keymap.set("n", "<localleader>cca", "<cmd>ClangdAST<CR>", { buffer = bufnr, desc = "Show AST" })
-        vim.keymap.set(
-            "n",
-            "<leader>cch",
-            "<cmd>ClangdSwitchSourceHeader<CR>",
-            { buffer = bufnr, desc = "Switch between source and header" }
-        )
-        vim.keymap.set(
-            "n",
-            "<localleader>h",
-            "<cmd>ClangdTypeHierarchy<CR>",
-            { buffer = bufnr, desc = "Show type hierarchy" }
-        )
-    end,
-})
+for name, config in pairs(servers) do
+    if config == true then
+        config = {}
+    end
+    config = vim.tbl_deep_extend("force", {}, {
+        capabilities = capabilities,
+    }, config)
+
+    lspconfig[name].setup(config)
+end
 
 vim.g.rustaceanvim = {
     inlay_hints = {
@@ -161,32 +103,5 @@ vim.g.rustaceanvim = {
         hover_actions = {
             auto_focus = true,
         },
-    },
-    server = {
-        on_attach = function(client, bufnr)
-            local opts = { noremap = true, silent = true }
-            vim.api.nvim_buf_set_keymap(
-                bufnr,
-                "n",
-                "s",
-                '<cmd>lua require("tree_climber_rust").init_selection()<CR>',
-                opts
-            )
-            vim.api.nvim_buf_set_keymap(
-                bufnr,
-                "x",
-                "s",
-                '<cmd>lua require("tree_climber_rust").select_incremental()<CR>',
-                opts
-            )
-            vim.api.nvim_buf_set_keymap(
-                bufnr,
-                "x",
-                "S",
-                '<cmd>lua require("tree_climber_rust").select_previous()<CR>',
-                opts
-            )
-            require("lsp-inlayhints").on_attach(client, bufnr)
-        end,
     },
 }

@@ -16,15 +16,15 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     -- colorschemes
+    -- {
+    --     "ellisonleao/gruvbox.nvim",
+    --     priority = 1000,
+    --     config = true,
+    --     opts = {}
+    -- },
     {
-        "folke/tokyonight.nvim",
-        lazy = false,
+        "sainnhe/gruvbox-material",
         priority = 1000,
-    },
-    {
-        "ellisonleao/gruvbox.nvim",
-        priority = 1000,
-        config = true,
         opts = {}
     },
     {
@@ -78,7 +78,15 @@ require("lazy").setup({
     {
         "stevearc/oil.nvim",
         config = function()
-            require("oil").setup()
+            require("oil").setup({
+                columns = { "icon" },
+                keymaps = {
+                    ["<M-h>"] = "actions.select_split",
+                },
+                view_options = {
+                    show_hidden = true,
+                },
+            })
         end,
     },
 
@@ -142,16 +150,16 @@ require("lazy").setup({
         lazy = false,
     },
 
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-            "MunifTanjim/nui.nvim",
-            -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-        },
-    },
+    -- {
+    --     "nvim-neo-tree/neo-tree.nvim",
+    --     branch = "v3.x",
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",
+    --         "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    --         "MunifTanjim/nui.nvim",
+    --         -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    --     },
+    -- },
 
     {
         "nvim-treesitter/nvim-treesitter",
@@ -181,11 +189,11 @@ require("lazy").setup({
     "L3MON4D3/LuaSnip",
     "saadparwaiz1/cmp_luasnip",
 
-    "j-hui/fidget.nvim",
-
     {
-        "williamboman/mason.nvim"
+        "j-hui/fidget.nvim", opts = {}
     },
+
+    "williamboman/mason.nvim",
 
     {
         "folke/neodev.nvim",
@@ -197,19 +205,34 @@ require("lazy").setup({
         version = "^4", -- Recommended
         lazy = false,   -- This plugin is already lazy
     },
-    "adaszko/tree_climber_rust.nvim",
 
     "p00f/clangd_extensions.nvim",
 
+    -- {
+    --     'nvimdev/lspsaga.nvim',
+    --     event = 'LspAttach',
+    --     config = function()
+    --         require('lspsaga').setup({})
+    --     end,
+    --     dependencies = {
+    --         'nvim-treesitter/nvim-treesitter', -- optional
+    --         'nvim-tree/nvim-web-devicons',     -- optional
+    --     }
+    -- },
+
+
     'Treeniks/isabelle-lsp.nvim',
     'Treeniks/isabelle-syn.nvim',
-    'mfussenegger/nvim-dap',
 
+    -- DAP
     {
-        "rcarriga/nvim-dap-ui",
+        'mfussenegger/nvim-dap',
         dependencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-neotest/nvim-nio" }
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+            "theHamsta/nvim-dap-virtual-text",
+            "williamboman/mason.nvim",
+        },
     },
 
 
@@ -250,12 +273,6 @@ require("lazy").setup({
         }
     },
 
-    -- {
-    --     "folke/zen-mode.nvim",
-    --     opts = {
-    --     }
-    -- },
-    --
     {
         "Pocco81/true-zen.nvim",
         config = function()
