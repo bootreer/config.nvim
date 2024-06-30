@@ -23,14 +23,19 @@ set({ "n", "v" }, "<leader>d", [["d]])
 
 set("i", "<C-c>", "<Esc>")
 
--- TAB in normal mode will move to text buffer
+-- TAB to change buffers
 set("n", "<TAB>", ":bnext<CR>")
--- SHIFT-TAB will go back
 set("n", "<S-TAB>", ":bprevious<CR>")
 
 -- Better tabbing
 set("v", "<", "<gv")
 set("v", ">", ">gv")
+
+-- control size of splits
+set("n", "<M-,>", "<c-w>5<")
+set("n", "<M-.>", "<c-w>5>")
+set("n", "<M-t>", "<C-w>+")
+set("n", "<M-s>", "<C-w>-")
 
 -- tmux navigation
 local nvim_tmux_nav = require("nvim-tmux-navigation")

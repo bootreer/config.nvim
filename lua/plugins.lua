@@ -16,12 +16,12 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     -- colorschemes
-    -- {
-    --     "ellisonleao/gruvbox.nvim",
-    --     priority = 1000,
-    --     config = true,
-    --     opts = {}
-    -- },
+    {
+        "ellisonleao/gruvbox.nvim",
+        priority = 1000,
+        config = true,
+        opts = {}
+    },
     {
         "sainnhe/gruvbox-material",
         priority = 1000,
@@ -32,27 +32,49 @@ require("lazy").setup({
         lazy = false,
         priority = 1000,
     },
-    --
     {
         "kylechui/nvim-surround",
         version = "*", -- use for stability
         event = "VeryLazy",
         opts = {},
     },
+    {
+        "tjdevries/colorbuddy.nvim",
+    },
     --
     {
-        'goolord/alpha-nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        "goolord/alpha-nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
-            require('alpha').setup(require 'alpha.themes.startify'.config)
+            require("alpha").setup(require "alpha.themes.startify".config)
         end
     },
     --
     {
-        'lewis6991/gitsigns.nvim',
+        "lewis6991/gitsigns.nvim",
         config = function()
             require("gitsigns").setup()
         end,
+    },
+    --
+    -- {
+    --     "folke/noice.nvim",
+    --     event = "VeryLazy",
+    --     opts = {
+    --         cmdline = { enabled = false },
+    --         messages = { enabled = false },
+    --         lsp = {
+    --             progress = { enabled = false },
+    --         },
+    --     },
+    --     dependencies = {
+    --         "MunifTanjim/nui.nvim",
+    --     }
+    -- },
+
+    {
+        "stevearc/dressing.nvim",
+        opts = {},
     },
     --
     "alexghergh/nvim-tmux-navigation",
@@ -60,6 +82,11 @@ require("lazy").setup({
     "nvim-lua/plenary.nvim",
     {
         "nvim-telescope/telescope.nvim",
+        dependencies = {
+            "nvim-telescope/telescope-ui-select.nvim",
+
+            "nvim-telescope/telescope-project.nvim",
+        },
         opts = {
             pickers = {
                 find_files = {
@@ -67,14 +94,20 @@ require("lazy").setup({
                 },
             },
         },
-    },
-    {
-        "nvim-telescope/telescope-project.nvim",
         config = function()
-            require("telescope").load_extension("project")
-        end,
-    },
+            require("telescope").setup {
+                extensions = {
+                    wrap_results = true,
+                    ["ui-select"] = {
+                        require("telescope.themes").get_dropdown({})
+                    }
+                }
 
+            }
+            require("telescope").load_extension("project")
+            require("telescope").load_extension("ui-select")
+        end
+    },
     {
         "stevearc/oil.nvim",
         config = function()
@@ -138,9 +171,9 @@ require("lazy").setup({
     },
 
     {
-        'akinsho/bufferline.nvim',
+        "akinsho/bufferline.nvim",
         version = "*",
-        dependencies = 'nvim-tree/nvim-web-devicons'
+        dependencies = "nvim-tree/nvim-web-devicons"
     },
 
     -- gcc keybind
@@ -171,6 +204,7 @@ require("lazy").setup({
 
     {
         "windwp/nvim-autopairs",
+        event = "InsertEnter",
         config = function()
             local autopairs = require("nvim-autopairs")
             autopairs.setup()
@@ -209,24 +243,23 @@ require("lazy").setup({
     "p00f/clangd_extensions.nvim",
 
     -- {
-    --     'nvimdev/lspsaga.nvim',
-    --     event = 'LspAttach',
+    --     "nvimdev/lspsaga.nvim",
+    --     event = "LspAttach",
     --     config = function()
-    --         require('lspsaga').setup({})
+    --         require("lspsaga").setup({})
     --     end,
     --     dependencies = {
-    --         'nvim-treesitter/nvim-treesitter', -- optional
-    --         'nvim-tree/nvim-web-devicons',     -- optional
+    --         "nvim-treesitter/nvim-treesitter", -- optional
+    --         "nvim-tree/nvim-web-devicons",     -- optional
     --     }
     -- },
 
-
-    'Treeniks/isabelle-lsp.nvim',
-    'Treeniks/isabelle-syn.nvim',
+    "Treeniks/isabelle-lsp.nvim",
+    "Treeniks/isabelle-syn.nvim",
 
     -- DAP
     {
-        'mfussenegger/nvim-dap',
+        "mfussenegger/nvim-dap",
         dependencies = {
             "rcarriga/nvim-dap-ui",
             "nvim-neotest/nvim-nio",
@@ -248,7 +281,6 @@ require("lazy").setup({
             hint_prefix = "",
             floating_window = false,
             bind = true,
-
         },
         config = function(_, opts)
             require("lsp_signature").setup(opts)
@@ -346,7 +378,7 @@ require("lazy").setup({
     {
         "karb94/neoscroll.nvim",
         config = function()
-            require('neoscroll').setup {}
+            require("neoscroll").setup {}
         end
     },
 

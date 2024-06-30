@@ -2,7 +2,7 @@ require("plugins")
 require("remap")
 
 vim.opt.nu = true
-vim.opt.relativenumber = false
+vim.opt.relativenumber = true
 vim.o.mouse = "a"
 
 vim.opt.syntax = "enable"
@@ -55,29 +55,29 @@ vim.g.gruvbox_material_transparent_background = 1
 vim.g.gruvbox_material_foreground = "mix"
 
 vim.cmd.colorscheme('gruvbox-material')
+-- vim.cmd.colorscheme('gruvbox')
 
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
-require("bufferline").setup{}
+require("bufferline").setup {}
 
 -- lualine
-require('lualine').setup{
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {
-      'filename',
-      function()
-        return vim.fn['nvim_treesitter#statusline'](180)
-      end},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
+require('lualine').setup {
+    sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = {
+            'filename',
+            function()
+                return vim.fn['nvim_treesitter#statusline'](180)
+            end },
+        lualine_x = { 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' }
+    },
 }
 
 vim.diagnostic.config({
-  virtual_text = false,
+    virtual_text = false,
 })
-
