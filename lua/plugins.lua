@@ -33,21 +33,24 @@ require("lazy").setup({
         priority = 1000,
     },
     {
-        "kylechui/nvim-surround",
-        version = "*", -- use for stability
-        event = "VeryLazy",
-        opts = {},
-    },
-    {
-        "tjdevries/colorbuddy.nvim",
+        "catppuccin/nvim",
+        name = "catppuccin",
+        priority = 1000
     },
     --
     {
         "goolord/alpha-nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
-            require("alpha").setup(require "alpha.themes.startify".config)
+            require("alpha").setup(require "alpha.themes.theta".config)
         end
+    },
+    --
+    {
+        "kylechui/nvim-surround",
+        version = "*", -- use for stability
+        event = "VeryLazy",
+        opts = {},
     },
     --
     {
@@ -56,25 +59,34 @@ require("lazy").setup({
             require("gitsigns").setup()
         end,
     },
-    --
-    -- {
-    --     "folke/noice.nvim",
-    --     event = "VeryLazy",
-    --     opts = {
-    --         cmdline = { enabled = false },
-    --         messages = { enabled = false },
-    --         lsp = {
-    --             progress = { enabled = false },
-    --         },
-    --     },
-    --     dependencies = {
-    --         "MunifTanjim/nui.nvim",
-    --     }
-    -- },
 
     {
         "stevearc/dressing.nvim",
         opts = {},
+    },
+
+    {
+        "backdround/improved-ft.nvim",
+        opts = {},
+        config = function()
+            require("improved-ft").setup({
+                -- Maps default f/F/t/T/;/, keys.
+                -- default: false
+                use_default_mappings = false,
+
+                -- Ignores case of the given characters.
+                -- default: false
+                ignore_char_case = true,
+
+                -- Takes a last hop direction into account during repetition hops
+                -- default: false
+                use_relative_repetition = true,
+
+                -- Uses direction-relative offsets during repetition hops.
+                -- default: false
+                use_relative_repetition_offsets = true,
+            })
+        end
     },
     --
     "alexghergh/nvim-tmux-navigation",
@@ -161,6 +173,13 @@ require("lazy").setup({
     {
         "johnfrankmorgan/whitespace.nvim",
         main = "whitespace-nvim",
+        config = function()
+            require('whitespace-nvim').setup({
+                ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard', 'isabelle_output' },
+                ignore_terminal = true,
+                return_cursor = true,
+            })
+        end,
         opts = {},
     },
 
@@ -199,6 +218,13 @@ require("lazy").setup({
         build = ":TSUpdate",
     },
 
+    {
+        "mfussenegger/nvim-treehopper",
+        config = function()
+            require("tsht").config.hint_keys = { "h", "j", "f", "d", "n", "v", "s", "l", "a" }
+        end
+    },
+
     "nvim-treesitter/nvim-treesitter-context",
     "nvim-treesitter/nvim-treesitter-textobjects",
 
@@ -209,6 +235,7 @@ require("lazy").setup({
             local autopairs = require("nvim-autopairs")
             autopairs.setup()
             autopairs.remove_rule("`")
+            autopairs.remove_rule("'")
         end,
     },
 
@@ -224,6 +251,13 @@ require("lazy").setup({
     "saadparwaiz1/cmp_luasnip",
 
     {
+        "m-demare/hlargs.nvim",
+        config = function()
+            require("hlargs").setup()
+        end
+    },
+
+    {
         "j-hui/fidget.nvim", opts = {}
     },
 
@@ -235,12 +269,19 @@ require("lazy").setup({
     },
 
     {
+        "tjdevries/ocaml.nvim",
+        build = ":lua require(\"ocaml\").update()",
+    },
+
+    {
         "mrcjkb/rustaceanvim",
-        version = "^4", -- Recommended
+        version = "^5", -- Recommended
         lazy = false,   -- This plugin is already lazy
     },
 
     "p00f/clangd_extensions.nvim",
+
+    "rhysd/vim-llvm",
 
     -- {
     --     "nvimdev/lspsaga.nvim",
@@ -254,7 +295,14 @@ require("lazy").setup({
     --     }
     -- },
 
-    "Treeniks/isabelle-lsp.nvim",
+    {
+        "Treeniks/isabelle-lsp.nvim",
+        branch = "isabelle-language-server",
+        dependencies = {
+            "neovim/nvim-lspconfig"
+        }
+    },
+
     "Treeniks/isabelle-syn.nvim",
 
     -- DAP
@@ -268,12 +316,6 @@ require("lazy").setup({
         },
     },
 
-
-    {
-        "lvimuser/lsp-inlayhints.nvim",
-        opts = {},
-    },
-
     {
         "ray-x/lsp_signature.nvim",
         event = "VeryLazy",
@@ -285,6 +327,18 @@ require("lazy").setup({
         config = function(_, opts)
             require("lsp_signature").setup(opts)
         end,
+    },
+
+    {
+        "rachartier/tiny-code-action.nvim",
+        dependencies = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-telescope/telescope.nvim" },
+        },
+        event = "LspAttach",
+        config = function()
+            require('tiny-code-action').setup()
+        end
     },
 
     {
@@ -312,58 +366,58 @@ require("lazy").setup({
         end,
     },
 
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 1000,
-        config = true,
-        -- opts = {
-        --     rocks = { "magick " },
-        -- }
-    },
+    -- {
+    --     "vhyrro/luarocks.nvim",
+    --     priority = 1000,
+    --     config = true,
+    --     -- opts = {
+    --     --     rocks = { "magick " },
+    --     -- }
+    -- },
 
-    {
-        "nvim-neorg/neorg",
-        dependencies = { "luarocks.nvim" },
-        lazy = false,
-        version = "*",
-        config = function()
-            require("neorg").setup {
-                load = {
-                    ["core.defaults"] = {},
-                    ["core.concealer"] = {},
-                    ["core.dirman"] = {
-                        config = {
-                            workspaces = {
-                                notes = "~/notes",
-                                fpv = "~/uni/fpv",
-                            },
-                            default_workspace = "notes",
-                        },
-                    },
-                    ["core.completion"] = {
-                        config = {
-                            engine = "nvim-cmp",
-                            name = "[Neorg]"
-                        }
-                    },
-                    -- ["core.manoeuvre"] = {},
-                    ["core.presenter"] = {
-                        config = {
-                            zen_mode = "zen-mode",
-                        }
-                    },
-
-                    -- require nvim 0.10
-                    -- ["core.integrations.image"] = {},
-                    -- ["core.latex.renderer"] = {},
-                    -- ["core.ui.calendar"] = {},
-                }
-            }
-
-            vim.wo.foldlevel = 99
-            vim.wo.conceallevel = 2
-        end
-    },
+    -- {
+    --     "nvim-neorg/neorg",
+    --     dependencies = { "luarocks.nvim" },
+    --     lazy = false,
+    --     version = "*",
+    --     config = function()
+    --         require("neorg").setup {
+    --             load = {
+    --                 ["core.defaults"] = {},
+    --                 ["core.concealer"] = {},
+    --                 ["core.dirman"] = {
+    --                     config = {
+    --                         workspaces = {
+    --                             notes = "~/notes",
+    --                             fpv = "~/uni/fpv",
+    --                         },
+    --                         default_workspace = "notes",
+    --                     },
+    --                 },
+    --                 ["core.completion"] = {
+    --                     config = {
+    --                         engine = "nvim-cmp",
+    --                         name = "[Neorg]"
+    --                     }
+    --                 },
+    --                 -- ["core.manoeuvre"] = {},
+    --                 ["core.presenter"] = {
+    --                     config = {
+    --                         zen_mode = "zen-mode",
+    --                     }
+    --                 },
+    --
+    --                 -- require nvim 0.10
+    --                 -- ["core.integrations.image"] = {},
+    --                 -- ["core.latex.renderer"] = {},
+    --                 -- ["core.ui.calendar"] = {},
+    --             }
+    --         }
+    --
+    --         vim.wo.foldlevel = 99
+    --         vim.wo.conceallevel = 2
+    --     end
+    -- },
 
     -- {
     --     "3rd/image.nvim",
@@ -375,11 +429,11 @@ require("lazy").setup({
     --     end
     -- },
 
-    {
-        "karb94/neoscroll.nvim",
-        config = function()
-            require("neoscroll").setup {}
-        end
-    },
+    -- {
+    --     "karb94/neoscroll.nvim",
+    --     config = function()
+    --         require("neoscroll").setup {}
+    --     end
+    -- },
 
 })

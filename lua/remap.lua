@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = ","
+vim.g.maplocalleader = ";"
 
 local set = vim.keymap.set
 
@@ -13,6 +13,8 @@ set("n", "<C-u>", "<C-u>zz")
 set("n", "n", "nzzzv")
 set("n", "N", "Nzzzv")
 
+set("n", ":bd", ":bp | sp | bn | bd", { desc = "Close buffer" })
+
 set("x", "<leader>p", [["_dP]])
 
 -- yank to clipboard
@@ -24,8 +26,8 @@ set({ "n", "v" }, "<leader>d", [["d]])
 set("i", "<C-c>", "<Esc>")
 
 -- TAB to change buffers
-set("n", "<TAB>", ":bnext<CR>")
-set("n", "<S-TAB>", ":bprevious<CR>")
+set("n", "<TAB>", ":bnext<CR>", { silent = true })
+set("n", "<S-TAB>", ":bprevious<CR>", { silent = true })
 
 -- Better tabbing
 set("v", "<", "<gv")
@@ -58,7 +60,7 @@ set('n', '<leader>/', builtin.live_grep, { desc = 'Telescope Grep Search' })
 
 set('n', '<leader>fp', require("telescope").extensions.project.project, { desc = 'Telescope Project' })
 
-set('n', '<leader>e', require("oil").toggle_float, { desc = "Toggle oil" })
+set('n', '<leader>.', require("oil").toggle_float, { desc = "Toggle oil" })
 
 -- v for version control
 local neogit = require("neogit")
@@ -87,11 +89,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', 'K', vim.lsp.buf.hover, { desc = 'LSP Hover', buffer = bufnr })
         set('n', '<leader>cf', vim.lsp.buf.format, { desc = 'LSP Format', buffer = bufnr })
         set('n', '<leader>cr', vim.lsp.buf.rename, { desc = 'LSP Rename', buffer = bufnr })
-        set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'LSP Code Action', buffer = bufnr })
+        set('n', '<leader>ca', require("tiny-code-action").code_action, { desc = 'LSP Code Action', buffer = bufnr })
 
         set('n', 'gd', builtin.lsp_definitions, { desc = 'LSP Goto Definition (Telescope)', buffer = bufnr })
         set('n', 'gr', builtin.lsp_references, { desc = 'LSP Find References (Telescope)', buffer = bufnr })
+        set('n', 'gi', builtin.lsp_implementations, { desc = 'LSP Goto implementations (Telescope)', buffer = bufnr })
+        set('n', 'gF', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
+        set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
         set('n', 'gD', vim.lsp.buf.declaration, { desc = 'LSP Goto Declaration', buffer = bufnr })
+
         set('n', '<leader>cd', vim.diagnostic.open_float,
             { desc = 'Diagnostic Open Float', buffer = bufnr })
 
@@ -109,7 +115,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
                 callback = function()
                     vim.lsp.codelens.refresh()
                 end,
-                buffer = bufnr,
+                buffer = 0,
             })
         end
 
@@ -143,14 +149,35 @@ set("n", "<F2>", dap.step_into)
 set("n", "<F3>", dap.step_over)
 set("n", "<F4>", dap.step_out)
 set("n", "<F5>", dap.step_back)
-set("n", "<F13>", dap.restart)
+set("n", "<F12>", dap.restart)
 
 -- local neotree = require('neo-tree.command')
 -- set('n', '<leader>tt', function() neotree.execute({ action = "focus", toggle = true }) end,
 --     { desc = "Toggle NeoTree" })
+
+set('n', '<Leader>t', require('whitespace-nvim').trim, { desc = "Trim whitespace" })
 
 set("n", "<leader>Zn", ":TZNarrow<CR>", {})
 set("v", "<leader>Zn", ":'<,'>TZNarrow<CR>", {})
 set("n", "<leader>Zf", ":TZFocus<CR>", {})
 set("n", "<leader>Zm", ":TZMinimalist<CR>", {})
 set("n", "<leader>Za", ":TZAtaraxis<CR>", {})
+
+-- improved-ft
+local map = function(key, fn, description)
+    vim.keymap.set({ "n", "x", "o" }, key, fn, {
+        desc = description,
+        expr = true,
+    })
+end
+
+local ft = require("improved-ft")
+
+map("f", ft.hop_forward_to_char, "Hop forward to a given char")
+map("F", ft.hop_backward_to_char, "Hop backward to a given char")
+
+map("t", ft.hop_forward_to_pre_char, "Hop forward before a given char")
+map("T", ft.hop_backward_to_pre_char, "Hop backward before a given char")
+
+map(".", ft.repeat_forward, "Repeat hop forward to a last given char")
+map(",", ft.repeat_backward, "Repeat hop backward to a last given char")

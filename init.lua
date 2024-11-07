@@ -52,10 +52,10 @@ vim.o.completeopt = "menuone,noinsert,noselect"
 vim.g.gruvbox_material_enable_italic = false
 vim.g.gruvbox_material_background = "medium"
 vim.g.gruvbox_material_transparent_background = 1
-vim.g.gruvbox_material_foreground = "mix"
+vim.g.gruvbox_material_foreground = "original"
 
-vim.cmd.colorscheme('gruvbox-material')
--- vim.cmd.colorscheme('gruvbox')
+-- vim.cmd.colorscheme('gruvbox-material')
+vim.cmd.colorscheme('gruvbox')
 
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
