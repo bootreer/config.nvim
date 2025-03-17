@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = ";"
+vim.g.maplocalleader = "."
 
 local set = vim.keymap.set
 
@@ -34,30 +34,26 @@ set("v", "<", "<gv")
 set("v", ">", ">gv")
 
 -- control size of splits
-set("n", "<M-,>", "<c-w>5<")
-set("n", "<M-.>", "<c-w>5>")
+set("n", "<M-,>", "<C-w>5<")
+set("n", "<M-.>", "<C-w>5>")
 set("n", "<M-t>", "<C-w>+")
 set("n", "<M-s>", "<C-w>-")
 
 -- tmux navigation
-local nvim_tmux_nav = require("nvim-tmux-navigation")
-set("n", "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
-set("n", "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
-set("n", "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
-set("n", "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
-set("n", "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
-set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
+-- local nvim_tmux_nav = require("nvim-tmux-navigation")
+-- set("n", "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
+-- set("n", "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
+-- set("n", "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
+-- set("n", "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
+-- set("n", "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
+-- set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
 
 local builtin = require("telescope.builtin")
 set('n', '<leader>ff', builtin.find_files, { desc = "Telescope [f]ind [f]iles" })
 set('n', '<leader>fg', builtin.live_grep, { desc = "Telescope [f]ind [g]it files" })
 set('n', '<leader>,', builtin.buffers, { desc = "Telescope buffers" })
--- set('n', '<leader>fb', builtin.buffers, { })
-set('n', '<leader>fh', builtin.help_tags, {})
--- set('n', '<leader>/', function() builtin.grep_string({ search = vim.fn.input('Grep > ') }) end,
---     { desc = 'Telescope Grep Search' })
+set('n', '<leader>fh', builtin.help_tags, { desc = "Telescope [f]ind [h]elp tags" })
 set('n', '<leader>/', builtin.live_grep, { desc = 'Telescope Grep Search' })
-
 set('n', '<leader>fp', require("telescope").extensions.project.project, { desc = 'Telescope Project' })
 
 set('n', '<leader>.', require("oil").toggle_float, { desc = "Toggle oil" })
@@ -69,6 +65,9 @@ set('n', '<leader>j', vim.cmd.tabnext, { desc = 'Tab Next' })
 set('n', '<leader>k', vim.cmd.tabprevious, { desc = 'Tab Previous' })
 set('n', '<leader>n', vim.cmd.tabnew, { desc = 'Tab New' })
 set('n', '<leader>q', vim.cmd.tabclose, { desc = 'Tab Close' })
+
+local copilot_panel = require('copilot.panel')
+set('n', '<leader>cp', copilot_panel.open, { desc = "Open Copilot Panel"})
 
 -- toggleterm
 set({ 'n', 'i', 't' }, '<C-\\>', function() vim.cmd.ToggleTerm('direction=float') end,
@@ -92,11 +91,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', '<leader>ca', require("tiny-code-action").code_action, { desc = 'LSP Code Action', buffer = bufnr })
 
         set('n', 'gd', builtin.lsp_definitions, { desc = 'LSP Goto Definition (Telescope)', buffer = bufnr })
+        set('n', 'gD', vim.lsp.buf.declaration, { desc = 'LSP Goto Declaration', buffer = bufnr })
         set('n', 'gr', builtin.lsp_references, { desc = 'LSP Find References (Telescope)', buffer = bufnr })
         set('n', 'gi', builtin.lsp_implementations, { desc = 'LSP Goto implementations (Telescope)', buffer = bufnr })
         set('n', 'gF', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
-        set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
-        set('n', 'gD', vim.lsp.buf.declaration, { desc = 'LSP Goto Declaration', buffer = bufnr })
+        set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
 
         set('n', '<leader>cd', vim.diagnostic.open_float,
             { desc = 'Diagnostic Open Float', buffer = bufnr })
@@ -171,13 +170,12 @@ local map = function(key, fn, description)
     })
 end
 
-local ft = require("improved-ft")
-
-map("f", ft.hop_forward_to_char, "Hop forward to a given char")
-map("F", ft.hop_backward_to_char, "Hop backward to a given char")
-
-map("t", ft.hop_forward_to_pre_char, "Hop forward before a given char")
-map("T", ft.hop_backward_to_pre_char, "Hop backward before a given char")
-
-map(".", ft.repeat_forward, "Repeat hop forward to a last given char")
-map(",", ft.repeat_backward, "Repeat hop backward to a last given char")
+-- local ft = require("improved-ft")
+-- map("f", ft.hop_forward_to_char, "Hop forward to a given char")
+-- map("F", ft.hop_backward_to_char, "Hop backward to a given char")
+--
+-- map("t", ft.hop_forward_to_pre_char, "Hop forward before a given char")
+-- map("T", ft.hop_backward_to_pre_char, "Hop backward before a given char")
+--
+-- map(".", ft.repeat_forward, "Repeat hop forward to a last given char")
+-- map(",", ft.repeat_backward, "Repeat hop backward to a last given char")

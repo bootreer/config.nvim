@@ -50,7 +50,6 @@ require("lazy").setup({
         "kylechui/nvim-surround",
         version = "*", -- use for stability
         event = "VeryLazy",
-        opts = {},
     },
     --
     {
@@ -62,34 +61,25 @@ require("lazy").setup({
 
     {
         "stevearc/dressing.nvim",
-        opts = {},
     },
 
     {
         "backdround/improved-ft.nvim",
-        opts = {},
         config = function()
             require("improved-ft").setup({
-                -- Maps default f/F/t/T/;/, keys.
-                -- default: false
-                use_default_mappings = false,
-
-                -- Ignores case of the given characters.
-                -- default: false
+                use_default_mappings = true,
                 ignore_char_case = true,
-
-                -- Takes a last hop direction into account during repetition hops
-                -- default: false
                 use_relative_repetition = true,
-
-                -- Uses direction-relative offsets during repetition hops.
-                -- default: false
                 use_relative_repetition_offsets = true,
             })
         end
     },
-    --
-    "alexghergh/nvim-tmux-navigation",
+
+    -- "alexghergh/nvim-tmux-navigation",
+    {
+        "aserowy/tmux.nvim",
+        config = function() return require("tmux").setup() end
+    },
 
     "nvim-lua/plenary.nvim",
     {
@@ -148,15 +138,12 @@ require("lazy").setup({
     {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {},
     },
 
     -- terminal emulator
     {
         "akinsho/toggleterm.nvim",
         version = "*",
-        opts = { --[[ things you want to change go here]]
-        },
     },
 
     -- indentation guides
@@ -180,7 +167,6 @@ require("lazy").setup({
                 return_cursor = true,
             })
         end,
-        opts = {},
     },
 
     -- status line
@@ -201,17 +187,6 @@ require("lazy").setup({
         opts = {},
         lazy = false,
     },
-
-    -- {
-    --     "nvim-neo-tree/neo-tree.nvim",
-    --     branch = "v3.x",
-    --     dependencies = {
-    --         "nvim-lua/plenary.nvim",
-    --         "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    --         "MunifTanjim/nui.nvim",
-    --         -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-    --     },
-    -- },
 
     {
         "nvim-treesitter/nvim-treesitter",
@@ -257,20 +232,14 @@ require("lazy").setup({
         end
     },
 
-    {
-        "j-hui/fidget.nvim", opts = {}
-    },
-
+    "j-hui/fidget.nvim",
     "williamboman/mason.nvim",
-
-    {
-        "folke/neodev.nvim",
-        opts = {},
-    },
+    "folke/lazydev.nvim",
 
     {
         "tjdevries/ocaml.nvim",
         build = ":lua require(\"ocaml\").update()",
+        commit = "8735069ce4267940e1038c7a2942881cf15481ce"
     },
 
     {
@@ -280,20 +249,7 @@ require("lazy").setup({
     },
 
     "p00f/clangd_extensions.nvim",
-
     "rhysd/vim-llvm",
-
-    -- {
-    --     "nvimdev/lspsaga.nvim",
-    --     event = "LspAttach",
-    --     config = function()
-    --         require("lspsaga").setup({})
-    --     end,
-    --     dependencies = {
-    --         "nvim-treesitter/nvim-treesitter", -- optional
-    --         "nvim-tree/nvim-web-devicons",     -- optional
-    --     }
-    -- },
 
     {
         "Treeniks/isabelle-lsp.nvim",
@@ -366,74 +322,31 @@ require("lazy").setup({
         end,
     },
 
-    -- {
-    --     "vhyrro/luarocks.nvim",
-    --     priority = 1000,
-    --     config = true,
-    --     -- opts = {
-    --     --     rocks = { "magick " },
-    --     -- }
-    -- },
+    {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup({
+                suggestion = { enabled = false },
+                panel = { enabled = false },
+            })
+        end,
 
-    -- {
-    --     "nvim-neorg/neorg",
-    --     dependencies = { "luarocks.nvim" },
-    --     lazy = false,
-    --     version = "*",
-    --     config = function()
-    --         require("neorg").setup {
-    --             load = {
-    --                 ["core.defaults"] = {},
-    --                 ["core.concealer"] = {},
-    --                 ["core.dirman"] = {
-    --                     config = {
-    --                         workspaces = {
-    --                             notes = "~/notes",
-    --                             fpv = "~/uni/fpv",
-    --                         },
-    --                         default_workspace = "notes",
-    --                     },
-    --                 },
-    --                 ["core.completion"] = {
-    --                     config = {
-    --                         engine = "nvim-cmp",
-    --                         name = "[Neorg]"
-    --                     }
-    --                 },
-    --                 -- ["core.manoeuvre"] = {},
-    --                 ["core.presenter"] = {
-    --                     config = {
-    --                         zen_mode = "zen-mode",
-    --                     }
-    --                 },
-    --
-    --                 -- require nvim 0.10
-    --                 -- ["core.integrations.image"] = {},
-    --                 -- ["core.latex.renderer"] = {},
-    --                 -- ["core.ui.calendar"] = {},
-    --             }
-    --         }
-    --
-    --         vim.wo.foldlevel = 99
-    --         vim.wo.conceallevel = 2
-    --     end
-    -- },
+    },
 
-    -- {
-    --     "3rd/image.nvim",
-    --     dependencies = { "luarocks.nvim" },
-    --     config = function()
-    --         require("image").setup({
-    --             backend = "ueberzug"
-    --         })
-    --     end
-    -- },
+    {
+        "zbirenbaum/copilot-cmp",
+        config = function()
+            require("copilot_cmp").setup()
+        end
+    },
 
-    -- {
-    --     "karb94/neoscroll.nvim",
-    --     config = function()
-    --         require("neoscroll").setup {}
-    --     end
-    -- },
+    {
+        'nacro90/numb.nvim',
+        config = function()
+            require('numb').setup()
+        end,
+    }
 
 })
