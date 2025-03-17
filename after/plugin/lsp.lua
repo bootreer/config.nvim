@@ -152,7 +152,6 @@ local servers = {
         settings = {
             Lua = {
                 diagnostics = {
-                    globals = { 'vim' },
                     disable = { 'missing-fields' },
                 },
             },
@@ -187,7 +186,7 @@ local servers = {
 }
 
 for name, config in pairs(servers) do
-    if config then
+    if config == true then
         config = {}
     end
     config = vim.tbl_deep_extend("force", {}, {
