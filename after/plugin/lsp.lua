@@ -148,7 +148,16 @@ local servers = {
         unicode_symbols_output = true,
         unicode_symbols_edits = true,
     },
-    lua_ls = true,
+    lua_ls = {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { 'vim' },
+                    disable = { 'missing-fields' },
+                },
+            },
+        },
+    },
     nil_ls = {
         settings = {
             ["nil"] = {

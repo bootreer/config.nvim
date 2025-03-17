@@ -234,7 +234,15 @@ require("lazy").setup({
 
     "j-hui/fidget.nvim",
     "williamboman/mason.nvim",
-    "folke/lazydev.nvim",
+
+    {
+        "folke/lazydev.nvim",
+        opts = {
+            enabled = function(root_dir)
+                return not vim.uv.fs_stat(root_dir .. "/.luarc.json")
+            end,
+        }
+    },
 
     {
         "tjdevries/ocaml.nvim",
