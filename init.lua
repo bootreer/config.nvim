@@ -62,25 +62,35 @@ vim.cmd.colorscheme('gruvbox')
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
-require("bufferline").setup{}
+-- require("bufferline").setup{}
 
 -- lualine
-require('lualine').setup{
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {
-      'filename',
-      function()
-        return vim.fn['nvim_treesitter#statusline'](180)
-      end},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
+require('lualine').setup {
+    options = {
+        theme = "gruvbox_dark",
+        section_separators = { left = '', right = '' },
+        component_separators = { left = '|', right = '|' }
+    },
+    sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = {
+            'filename',
+            function()
+                return vim.fn['nvim_treesitter#statusline'](180)
+            end },
+        lualine_x = { 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' }
+    },
+    tabline = {
+        lualine_a = { 'buffers' },
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {},
+        lualine_y = { 'lsp_status' },
+        lualine_z = { "tabs" }
+    },
 }
 
-vim.diagnostic.config({
-  virtual_text = false,
-})
-
+-- vim.o.winborder = "rounded"

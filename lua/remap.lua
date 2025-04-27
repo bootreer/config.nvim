@@ -21,8 +21,6 @@ set("x", "<leader>p", [["_dP]])
 set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to clipboard" })
 set("n", "<leader>Y", [["+Y]], { desc = "Yank to clipboard" })
 
-set({ "n", "v" }, "<leader>d", [["d]])
-
 set("i", "<C-c>", "<Esc>")
 
 -- TAB to change buffers
@@ -38,15 +36,6 @@ set("n", "<M-,>", "<C-w>5<")
 set("n", "<M-.>", "<C-w>5>")
 set("n", "<M-t>", "<C-w>+")
 set("n", "<M-s>", "<C-w>-")
-
--- tmux navigation
--- local nvim_tmux_nav = require("nvim-tmux-navigation")
--- set("n", "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
--- set("n", "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
--- set("n", "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
--- set("n", "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
--- set("n", "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
--- set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
 
 local builtin = require("telescope.builtin")
 set('n', '<leader>ff', builtin.find_files, { desc = "Telescope [f]ind [f]iles" })
@@ -67,7 +56,7 @@ set('n', '<leader>n', vim.cmd.tabnew, { desc = 'Tab New' })
 set('n', '<leader>q', vim.cmd.tabclose, { desc = 'Tab Close' })
 
 local copilot_panel = require('copilot.panel')
-set('n', '<leader>cp', copilot_panel.open, { desc = "Open Copilot Panel"})
+set('n', '<leader>cp', copilot_panel.open, { desc = "Open Copilot Panel" })
 
 -- toggleterm
 set({ 'n', 'i', 't' }, '<C-\\>', function() vim.cmd.ToggleTerm('direction=float') end,
@@ -85,7 +74,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local bufnr = args.buf
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id), "must have valid client")
 
-        set('n', 'K', vim.lsp.buf.hover, { desc = 'LSP Hover', buffer = bufnr })
+        set('n', 'K', function() vim.lsp.buf.hover({ border = 'single' }) end, { desc = 'LSP Hover', buffer = bufnr })
         set('n', '<leader>cf', vim.lsp.buf.format, { desc = 'LSP Format', buffer = bufnr })
         set('n', '<leader>cr', vim.lsp.buf.rename, { desc = 'LSP Rename', buffer = bufnr })
         set('n', '<leader>ca', require("tiny-code-action").code_action, { desc = 'LSP Code Action', buffer = bufnr })

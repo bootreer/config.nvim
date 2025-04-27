@@ -50,6 +50,9 @@ require("lazy").setup({
         "kylechui/nvim-surround",
         version = "*", -- use for stability
         event = "VeryLazy",
+        config = function()
+            require("nvim-surround").setup({})
+        end
     },
     --
     {
@@ -78,15 +81,17 @@ require("lazy").setup({
     -- "alexghergh/nvim-tmux-navigation",
     {
         "aserowy/tmux.nvim",
-        config = function() return require("tmux").setup() end
+        config = function()
+            return require("tmux").setup()
+        end
     },
 
     "nvim-lua/plenary.nvim",
+
     {
         "nvim-telescope/telescope.nvim",
         dependencies = {
             "nvim-telescope/telescope-ui-select.nvim",
-
             "nvim-telescope/telescope-project.nvim",
         },
         opts = {
@@ -98,6 +103,11 @@ require("lazy").setup({
         },
         config = function()
             require("telescope").setup {
+                -- pickers = {
+                --     find_files = {
+                --         theme = "dropdown",
+                --     }
+                -- },
                 extensions = {
                     wrap_results = true,
                     ["ui-select"] = {
@@ -136,8 +146,17 @@ require("lazy").setup({
     },
 
     {
+        "FabijanZulj/blame.nvim",
+        lazy = false,
+        config = function()
+            require('blame').setup {}
+        end,
+    },
+
+    {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {},
     },
 
     -- terminal emulator
@@ -173,12 +192,6 @@ require("lazy").setup({
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-    },
-
-    {
-        "akinsho/bufferline.nvim",
-        version = "*",
-        dependencies = "nvim-tree/nvim-web-devicons"
     },
 
     -- gcc keybind
@@ -239,7 +252,7 @@ require("lazy").setup({
         "folke/lazydev.nvim",
         opts = {
             enabled = function(root_dir)
-                return not vim.uv.fs_stat(root_dir .. "/.luarc.json")
+                return not vim.loop.fs_stat(root_dir .. "/.luarc.json")
             end,
         }
     },
@@ -287,6 +300,9 @@ require("lazy").setup({
             hint_prefix = "",
             floating_window = false,
             bind = true,
+            handler_opts = {
+                border = "single",
+            }
         },
         config = function(_, opts)
             require("lsp_signature").setup(opts)
@@ -305,12 +321,12 @@ require("lazy").setup({
         end
     },
 
-    {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        config = function()
-            require("lsp_lines").setup()
-        end,
-    },
+    -- {
+    --     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    --     config = function()
+    --         require("lsp_lines").setup()
+    --     end,
+    -- },
 
     {
         "folke/which-key.nvim",
@@ -340,7 +356,6 @@ require("lazy").setup({
                 panel = { enabled = false },
             })
         end,
-
     },
 
     {

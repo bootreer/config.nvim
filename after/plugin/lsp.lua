@@ -7,20 +7,9 @@ require("mason").setup()
 
 local _border = "single"
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-    vim.lsp.handlers.hover, {
-        border = _border
-    }
-)
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-    vim.lsp.handlers.signature_help, {
-        border = _border
-    }
-)
-
 vim.diagnostic.config {
-    float = { border = _border }
+    float = { border = _border },
+    virtual_lines = true,
 }
 
 require("lspconfig.ui.windows").default_options = {
@@ -31,10 +20,7 @@ require("lspconfig.ui.windows").default_options = {
 cmp.setup({
     snippet = {
         expand = function(args)
-            -- vim.fn["vsnip#anonymous"](args.body) -- vsnip
             luasnip.lsp_expand(args.body) -- For `luasnip` users.
-            -- require("snippy").expand_snippet(args.body) -- For `snippy` users.
-            -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
         end,
     },
     mapping = {
@@ -131,7 +117,7 @@ cmp.setup({
 })
 
 require("isabelle-lsp").setup({
-    isabelle_path = "/Users/tuomas/isabelle-lsp/isabelle-language-server/bin/isabelle",
+    isabelle_path = vim.fn.expand('$HOME/isabelle-lsp/isabelle-dev/bin/isabelle'),
     unicode_symbols_output = true,
     unicode_symbols_edits = true,
 })
@@ -152,7 +138,6 @@ local servers = {
         settings = {
             Lua = {
                 diagnostics = {
-                    globals = { 'vim' },
                     disable = { 'missing-fields' },
                 },
             },
@@ -187,7 +172,7 @@ local servers = {
 }
 
 for name, config in pairs(servers) do
-    if config then
+    if config == true then
         config = {}
     end
     config = vim.tbl_deep_extend("force", {}, {
@@ -198,7 +183,7 @@ for name, config in pairs(servers) do
 end
 
 -- NOTE
-local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/"
+local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.11.2/"
 local codelldb_path = extension_path .. 'adapter/codelldb'
 local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
 
