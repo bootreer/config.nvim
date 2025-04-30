@@ -15,7 +15,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    -- colorschemes
+    -- cosmetics
+    -- {{{
     {
         "ellisonleao/gruvbox.nvim",
         priority = 1000,
@@ -37,7 +38,6 @@ require("lazy").setup({
         name = "catppuccin",
         priority = 1000
     },
-    --
     {
         "goolord/alpha-nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -45,6 +45,25 @@ require("lazy").setup({
             require("alpha").setup(require "alpha.themes.theta".config)
         end
     },
+    {
+        "lewis6991/gitsigns.nvim",
+        config = function()
+            require("gitsigns").setup()
+        end,
+    },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        opts = {
+            bufdelete = { enabled = true },
+            input = { enabled = true },
+            notifier = { enabled = true },
+            scope = { enabled = true },
+            words = { enabled = true },
+        },
+    },
+    -- }}}
     --
     {
         "kylechui/nvim-surround",
@@ -54,18 +73,6 @@ require("lazy").setup({
             require("nvim-surround").setup({})
         end
     },
-    --
-    {
-        "lewis6991/gitsigns.nvim",
-        config = function()
-            require("gitsigns").setup()
-        end,
-    },
-
-    {
-        "stevearc/dressing.nvim",
-    },
-
     {
         "backdround/improved-ft.nvim",
         config = function()
@@ -78,7 +85,6 @@ require("lazy").setup({
         end
     },
 
-    -- "alexghergh/nvim-tmux-navigation",
     {
         "aserowy/tmux.nvim",
         config = function()
@@ -120,6 +126,7 @@ require("lazy").setup({
             require("telescope").load_extension("ui-select")
         end
     },
+
     {
         "stevearc/oil.nvim",
         config = function()
@@ -269,7 +276,7 @@ require("lazy").setup({
         lazy = false,   -- This plugin is already lazy
     },
 
-    "p00f/clangd_extensions.nvim",
+    "https://git.sr.ht/~p00f/clangd_extensions.nvim",
     "rhysd/vim-llvm",
 
     {

@@ -13,7 +13,9 @@ set("n", "<C-u>", "<C-u>zz")
 set("n", "n", "nzzzv")
 set("n", "N", "Nzzzv")
 
-set("n", ":bd", ":bp | sp | bn | bd", { desc = "Close buffer" })
+-- set("n", ":bd", ":bp | sp | bn | bd", { desc = "Close buffer" })
+local Snacks = require("snacks")
+set("n", ":bd<CR>", function() Snacks.bufdelete() end, { desc = "Close buffer" })
 
 set("x", "<leader>p", [["_dP]])
 
@@ -50,8 +52,8 @@ set('n', '<leader>.', require("oil").toggle_float, { desc = "Toggle oil" })
 -- v for version control
 local neogit = require("neogit")
 set('n', '<leader>v', neogit.open, { desc = 'Neogit' })
-set('n', '<leader>j', vim.cmd.tabnext, { desc = 'Tab Next' })
-set('n', '<leader>k', vim.cmd.tabprevious, { desc = 'Tab Previous' })
+set('n', '<leader>l', vim.cmd.tabnext, { desc = 'Tab Next' })
+set('n', '<leader>h', vim.cmd.tabprevious, { desc = 'Tab Previous' })
 set('n', '<leader>n', vim.cmd.tabnew, { desc = 'Tab New' })
 set('n', '<leader>q', vim.cmd.tabclose, { desc = 'Tab Close' })
 
@@ -66,9 +68,6 @@ set({ 'n', 'i', 't' }, '<C-\\>', function() vim.cmd.ToggleTerm('direction=float'
 set('t', '<C-]>', '<C-\\><C-n>', { desc = 'Exit Terminal Mode' })
 
 -- lsp keybinds and on_attach
-set("n", "]d", vim.diagnostic.goto_next, { desc = "Diagnostic Goto next" })
-set("n", "[d", vim.diagnostic.goto_prev, { desc = "Diagnostic Goto prev" })
-
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local bufnr = args.buf
@@ -86,10 +85,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', 'gF', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
         set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
 
-        set('n', '<leader>cd', vim.diagnostic.open_float,
+        set("n", "]d", vim.diagnostic.goto_next, { desc = "Diagnostic Goto next" })
+        set("n", "[d", vim.diagnostic.goto_prev, { desc = "Diagnostic Goto prev" })
+
+        set('n', '<leader>dk', vim.diagnostic.open_float,
             { desc = 'Diagnostic Open Float', buffer = bufnr })
 
-        set('n', '<Leader>k', vim.lsp.buf.signature_help, { desc = 'Signature help', buffer = bufnr })
+        set('n', '<leader>k', function() vim.lsp.buf.signature_help({ border = 'single' }) end,
+            { desc = 'Signature help', buffer = bufnr })
 
         if client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true) end
 
@@ -138,10 +141,6 @@ set("n", "<F3>", dap.step_over)
 set("n", "<F4>", dap.step_out)
 set("n", "<F5>", dap.step_back)
 set("n", "<F12>", dap.restart)
-
--- local neotree = require('neo-tree.command')
--- set('n', '<leader>tt', function() neotree.execute({ action = "focus", toggle = true }) end,
---     { desc = "Toggle NeoTree" })
 
 set('n', '<Leader>t', require('whitespace-nvim').trim, { desc = "Trim whitespace" })
 
