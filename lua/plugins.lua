@@ -1,6 +1,5 @@
 -- vi: foldmethod=marker
 
--- install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -63,8 +62,32 @@ require("lazy").setup({
             words = { enabled = true },
         },
     },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {
+            indent = { highlight = "Comment", char = "▏" },
+            scope = { enabled = false },
+        },
+    },
+    {
+        "johnfrankmorgan/whitespace.nvim",
+        main = "whitespace-nvim",
+        config = function()
+            require('whitespace-nvim').setup({
+                ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard', 'isabelle_output' },
+                ignore_terminal = true,
+                return_cursor = true,
+            })
+        end,
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+
     -- }}}
-    --
+
     {
         "kylechui/nvim-surround",
         version = "*", -- use for stability
@@ -109,11 +132,24 @@ require("lazy").setup({
         },
         config = function()
             require("telescope").setup {
-                -- pickers = {
-                --     find_files = {
-                --         theme = "dropdown",
-                --     }
-                -- },
+                defaults = {
+                    layout_strategy = "vertical",
+                    layout_config = {
+                        prompt_position = "top",
+                        preview_height = 0.6,
+                    },
+                },
+                pickers = {
+                    buffers = {
+                        show_all_buffers = true,
+                        sort_lastused = true,
+                        mappings = {
+                            i = {
+                                ["<c-d>"] = "delete_buffer",
+                            }
+                        }
+                    },
+                },
                 extensions = {
                     wrap_results = true,
                     ["ui-select"] = {
@@ -133,7 +169,7 @@ require("lazy").setup({
             require("oil").setup({
                 columns = { "icon" },
                 keymaps = {
-                    ["<M-h>"] = "actions.select_split",
+                    ["<C-x>"] = "actions.select_split",
                 },
                 view_options = {
                     show_hidden = true,
@@ -145,8 +181,8 @@ require("lazy").setup({
     {
         "NeogitOrg/neogit",
         dependencies = {
-            "nvim-lua/plenary.nvim",  -- required
-            "sindrets/diffview.nvim", -- Diff integration
+            "nvim-lua/plenary.nvim",
+            "sindrets/diffview.nvim",
             "nvim-telescope/telescope.nvim",
         },
         config = true,
@@ -172,34 +208,6 @@ require("lazy").setup({
         version = "*",
     },
 
-    -- indentation guides
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        opts = {
-            indent = { highlight = "Comment", char = "▏" },
-            scope = { enabled = false },
-        },
-    },
-
-    -- whitespace
-    {
-        "johnfrankmorgan/whitespace.nvim",
-        main = "whitespace-nvim",
-        config = function()
-            require('whitespace-nvim').setup({
-                ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard', 'isabelle_output' },
-                ignore_terminal = true,
-                return_cursor = true,
-            })
-        end,
-    },
-
-    -- status line
-    {
-        "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-    },
 
     -- gcc keybind
     {
@@ -214,14 +222,25 @@ require("lazy").setup({
     },
 
     {
-        "mfussenegger/nvim-treehopper",
-        config = function()
-            require("tsht").config.hint_keys = { "h", "j", "f", "d", "n", "v", "s", "l", "a" }
-        end
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = {
+            modes = {
+                char = {
+                    jump_labels = true
+                }
+            },
+        },
+        keys = {
+            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+        },
     },
 
     "nvim-treesitter/nvim-treesitter-context",
-    "nvim-treesitter/nvim-treesitter-textobjects",
 
     {
         "windwp/nvim-autopairs",
@@ -234,16 +253,46 @@ require("lazy").setup({
         end,
     },
 
+    {
+        "nvim-zh/colorful-winsep.nvim",
+        config = {
+            highlight = "#d79921",
+            animate = {
+                enabled = false
+            }
+        },
+        event = { "WinLeave" },
+    },
+
     -- LSP and autocompletion
+    -- {{{
     "neovim/nvim-lspconfig",
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-cmdline",
-    -- snippet engine (required for nvim-cmp)
-    "L3MON4D3/LuaSnip",
-    "saadparwaiz1/cmp_luasnip",
+
+    {
+        'saghen/blink.cmp',
+        dependencies = { 'rafamadriz/friendly-snippets' },
+        version = '1.*',
+        opts = {
+            keymap = { preset = 'enter' },
+            appearance = {
+                nerd_font_variant = 'mono'
+            },
+            completion = { documentation = { auto_show = true } },
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+            signature = { enabled = true },
+            sources = {
+                default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+                providers = {
+                    lazydev = {
+                        name = "LazyDev",
+                        module = "lazydev.integrations.blink",
+                        score_offset = 100,
+                    },
+                },
+            },
+        },
+        opts_extend = { "sources.default" }
+    },
 
     {
         "m-demare/hlargs.nvim",
@@ -253,7 +302,11 @@ require("lazy").setup({
     },
 
     "j-hui/fidget.nvim",
-    "williamboman/mason.nvim",
+
+    {
+        "williamboman/mason.nvim",
+        opts = {}
+    },
 
     {
         "folke/lazydev.nvim",
@@ -272,10 +325,11 @@ require("lazy").setup({
 
     {
         "mrcjkb/rustaceanvim",
-        version = "^5", -- Recommended
-        lazy = false,   -- This plugin is already lazy
+        version = "^6",
+        lazy = false,
     },
 
+    "ziglang/zig.vim",
     "https://git.sr.ht/~p00f/clangd_extensions.nvim",
     "rhysd/vim-llvm",
 
@@ -288,6 +342,13 @@ require("lazy").setup({
     },
 
     "Treeniks/isabelle-syn.nvim",
+
+    {
+        "chomosuke/typst-preview.nvim",
+        ft = "typst",
+        version = "1.*",
+        build = function() require "typst-preview".update() end,
+    },
 
     -- DAP
     {
@@ -323,17 +384,16 @@ require("lazy").setup({
             { "nvim-telescope/telescope.nvim" },
         },
         event = "LspAttach",
-        config = function()
-            require('tiny-code-action').setup()
-        end
+        opts = {},
     },
 
-    -- {
-    --     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    --     config = function()
-    --         require("lsp_lines").setup()
-    --     end,
-    -- },
+    {
+        "lervag/vimtex",
+        lazy = false,
+        init = function() end,
+    },
+
+    -- }}}
 
     {
         "folke/which-key.nvim",
@@ -351,25 +411,6 @@ require("lazy").setup({
         config = function()
             require("true-zen").setup {}
         end,
-    },
-
-    {
-        "zbirenbaum/copilot.lua",
-        cmd = "Copilot",
-        event = "InsertEnter",
-        config = function()
-            require("copilot").setup({
-                suggestion = { enabled = false },
-                panel = { enabled = false },
-            })
-        end,
-    },
-
-    {
-        "zbirenbaum/copilot-cmp",
-        config = function()
-            require("copilot_cmp").setup()
-        end
     },
 
     {

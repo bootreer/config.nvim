@@ -13,7 +13,6 @@ set("n", "<C-u>", "<C-u>zz")
 set("n", "n", "nzzzv")
 set("n", "N", "Nzzzv")
 
--- set("n", ":bd", ":bp | sp | bn | bd", { desc = "Close buffer" })
 local Snacks = require("snacks")
 set("n", ":bd<CR>", function() Snacks.bufdelete() end, { desc = "Close buffer" })
 
@@ -23,7 +22,7 @@ set("x", "<leader>p", [["_dP]])
 set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to clipboard" })
 set("n", "<leader>Y", [["+Y]], { desc = "Yank to clipboard" })
 
-set("i", "<C-c>", "<Esc>")
+-- set("i", "<C-c>", "<Esc>")
 
 -- TAB to change buffers
 set("n", "<TAB>", ":bnext<CR>", { silent = true })
@@ -57,15 +56,18 @@ set('n', '<leader>h', vim.cmd.tabprevious, { desc = 'Tab Previous' })
 set('n', '<leader>n', vim.cmd.tabnew, { desc = 'Tab New' })
 set('n', '<leader>q', vim.cmd.tabclose, { desc = 'Tab Close' })
 
-local copilot_panel = require('copilot.panel')
-set('n', '<leader>cp', copilot_panel.open, { desc = "Open Copilot Panel" })
-
 -- toggleterm
 set({ 'n', 'i', 't' }, '<C-\\>', function() vim.cmd.ToggleTerm('direction=float') end,
     { desc = 'Open Floating Terminal' })
 
 -- Default Keybind to go into Normal Mode while in Terminal Mode is <C-\><C-n>
 set('t', '<C-]>', '<C-\\><C-n>', { desc = 'Exit Terminal Mode' })
+
+-- Remove default keybinds from
+vim.keymap.del("n", "grr")
+vim.keymap.del("n", "grn")
+vim.keymap.del("n", "gra")
+vim.keymap.del("n", "gri")
 
 -- lsp keybinds and on_attach
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -85,30 +87,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', 'gF', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
         set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
 
-        set("n", "]d", vim.diagnostic.goto_next, { desc = "Diagnostic Goto next" })
-        set("n", "[d", vim.diagnostic.goto_prev, { desc = "Diagnostic Goto prev" })
-
         set('n', '<leader>dk', vim.diagnostic.open_float,
             { desc = 'Diagnostic Open Float', buffer = bufnr })
 
         set('n', '<leader>k', function() vim.lsp.buf.signature_help({ border = 'single' }) end,
             { desc = 'Signature help', buffer = bufnr })
-
-        if client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true) end
-
-        if client.server_capabilities.codeLensProvider then
-            local codelens = vim.api.nvim_create_augroup(
-                'LSPCodeLens',
-                { clear = true }
-            )
-            vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'CursorHold' }, {
-                group = codelens,
-                callback = function()
-                    vim.lsp.codelens.refresh()
-                end,
-                buffer = 0,
-            })
-        end
 
         if client ~= nil and client.name == "clangd" then
             vim.keymap.set("n", "<localleader>cca", "<cmd>ClangdAST<CR>", { buffer = bufnr, desc = "Show AST" })
@@ -128,7 +111,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 })
 
--- nvim DAP
 local dap = require("dap")
 set("n", "<leader>b", dap.toggle_breakpoint, { desc = "DAP Toggle breakpoint" })
 set("n", "<leader>gb", dap.run_to_cursor, { desc = "DAP Run to cursor" })
@@ -143,27 +125,8 @@ set("n", "<F5>", dap.step_back)
 set("n", "<F12>", dap.restart)
 
 set('n', '<Leader>t', require('whitespace-nvim').trim, { desc = "Trim whitespace" })
-
 set("n", "<leader>Zn", ":TZNarrow<CR>", {})
 set("v", "<leader>Zn", ":'<,'>TZNarrow<CR>", {})
 set("n", "<leader>Zf", ":TZFocus<CR>", {})
 set("n", "<leader>Zm", ":TZMinimalist<CR>", {})
 set("n", "<leader>Za", ":TZAtaraxis<CR>", {})
-
--- improved-ft
-local map = function(key, fn, description)
-    vim.keymap.set({ "n", "x", "o" }, key, fn, {
-        desc = description,
-        expr = true,
-    })
-end
-
--- local ft = require("improved-ft")
--- map("f", ft.hop_forward_to_char, "Hop forward to a given char")
--- map("F", ft.hop_backward_to_char, "Hop backward to a given char")
---
--- map("t", ft.hop_forward_to_pre_char, "Hop forward before a given char")
--- map("T", ft.hop_backward_to_pre_char, "Hop backward before a given char")
---
--- map(".", ft.repeat_forward, "Repeat hop forward to a last given char")
--- map(",", ft.repeat_backward, "Repeat hop backward to a last given char")

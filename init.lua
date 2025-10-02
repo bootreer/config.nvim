@@ -5,6 +5,7 @@ vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.o.mouse = "a"
 
+vim.o.winborder = "rounded"
 vim.opt.syntax = "enable"
 
 vim.opt.tabstop = 4
@@ -49,33 +50,27 @@ vim.opt.list = true
 
 vim.o.completeopt = "menuone,noinsert,noselect"
 
-vim.g.gruvbox_material_enable_italic = false
-vim.g.gruvbox_material_background = "medium"
-vim.g.gruvbox_material_transparent_background = 1
-vim.g.gruvbox_material_foreground = "original"
-
 vim.g.sidescroll = 0
-
--- vim.cmd.colorscheme('gruvbox-material')
 vim.cmd.colorscheme('gruvbox')
 
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.lsp.inlay_hint.enable(true)
 
--- require("bufferline").setup{}
-
--- lualine
 require('lualine').setup {
     options = {
         theme = "gruvbox_dark",
         section_separators = { left = '', right = '' },
-        component_separators = { left = '|', right = '|' }
+        component_separators = { left = '|', right = '|' },
+        disabled_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard' },
+        globalstatus = false,
+        -- always_show_tabline = true,
     },
     sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff', 'diagnostics' },
         lualine_c = {
-            'filename',
+            -- 'filename',
             function()
                 return vim.fn['nvim_treesitter#statusline'](180)
             end },
@@ -84,7 +79,11 @@ require('lualine').setup {
         lualine_z = { 'location' }
     },
     tabline = {
-        lualine_a = { 'buffers' },
+        lualine_a = {
+            {
+                'buffers',
+            },
+        },
         lualine_b = {},
         lualine_c = {},
         lualine_x = {},
@@ -92,5 +91,3 @@ require('lualine').setup {
         lualine_z = { "tabs" }
     },
 }
-
--- vim.o.winborder = "rounded"
