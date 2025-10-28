@@ -51,6 +51,21 @@ local servers = {
             return ftype
         end,
     },
+    pyright = {
+        settings = {
+            pyright = {
+                -- Using Ruff's import organizer
+                disableOrganizeImports = true,
+            },
+            python = {
+                analysis = {
+                    -- Ignore all files for analysis to exclusively use Ruff for linting
+                    ignore = { '*' },
+                },
+            },
+        },
+    },
+    ruff = true,
     svelte = true,
     texlab = true,
     tinymist = {
@@ -87,10 +102,6 @@ for name, config in pairs(servers) do
     vim.lsp.enable(name)
 end
 
-local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.11.2/"
-local codelldb_path = extension_path .. 'adapter/codelldb'
-local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
-
 vim.g.rustaceanvim = {
     inlay_hints = {
         highlight = "NonText",
@@ -103,7 +114,4 @@ vim.g.rustaceanvim = {
             auto_focus = true,
         },
     },
-    dap = {
-        adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb_path, liblldb_path)
-    }
 }
