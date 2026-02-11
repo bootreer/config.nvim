@@ -7,6 +7,7 @@ local set = vim.keymap.set
 set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 
+
 set("n", "J", "mzJ`z")
 set("n", "<C-d>", "<C-d>zz")
 set("n", "<C-u>", "<C-u>zz")
@@ -15,6 +16,7 @@ set("n", "N", "Nzzzv")
 
 local Snacks = require("snacks")
 set("n", ":bd<CR>", function() Snacks.bufdelete() end, { desc = "Close buffer" })
+set("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Close buffer" })
 
 set("x", "<leader>p", [["_dP]])
 
@@ -60,10 +62,7 @@ set('n', '<leader>q', vim.cmd.tabclose, { desc = 'Tab Close' })
 set({ 'n', 'i', 't' }, '<C-\\>', function() vim.cmd.ToggleTerm('direction=float') end,
     { desc = 'Open Floating Terminal' })
 
--- Default Keybind to go into Normal Mode while in Terminal Mode is <C-\><C-n>
-set('t', '<C-]>', '<C-\\><C-n>', { desc = 'Exit Terminal Mode' })
-
--- Remove default keybinds from
+-- Remove default keybinds
 vim.keymap.del("n", "grr")
 vim.keymap.del("n", "grn")
 vim.keymap.del("n", "gra")
@@ -87,10 +86,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', 'gF', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
         set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
 
+        set('n', 'fd', builtin.diagnostics, { desc = 'LSP diagnostics (Telescope)', buffer = bufnr })
+
         set('n', '<leader>dk', vim.diagnostic.open_float,
             { desc = 'Diagnostic Open Float', buffer = bufnr })
 
-        set('n', '<leader>k', function() vim.lsp.buf.signature_help({ border = 'single' }) end,
+        set('n', 'gK', function() vim.lsp.buf.signature_help({ border = 'single' }) end,
             { desc = 'Signature help', buffer = bufnr })
 
         if client ~= nil and client.name == "clangd" then

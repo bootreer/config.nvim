@@ -85,7 +85,10 @@ require("lazy").setup({
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
-
+    {
+        "karb94/neoscroll.nvim",
+        opts = {}
+    },
     -- }}}
 
     {
@@ -189,6 +192,33 @@ require("lazy").setup({
     },
 
     {
+        'abecodes/tabout.nvim',
+        lazy = false,
+        config = function()
+            require('tabout').setup {
+                act_as_tab = true,
+                act_as_shift_tab = false,
+                enable_backwards = true,
+                completion = false,
+                tabouts = {
+                    { open = "'", close = "'" },
+                    { open = '"', close = '"' },
+                    { open = '`', close = '`' },
+                    { open = '(', close = ')' },
+                    { open = '[', close = ']' },
+                    { open = '{', close = '}' },
+                    { open = '<', close = '>' },
+                },
+                ignore_beginning = true,
+                exclude = {}
+            }
+        end,
+        opt = true,
+        event = 'InsertCharPre',
+        priority = 1000,
+    },
+
+    {
         "FabijanZulj/blame.nvim",
         lazy = false,
         config = function()
@@ -206,6 +236,9 @@ require("lazy").setup({
     {
         "akinsho/toggleterm.nvim",
         version = "*",
+        config = function()
+            require("toggleterm").setup {}
+        end,
     },
 
 
@@ -293,6 +326,9 @@ require("lazy").setup({
                     },
                 },
             },
+            enabled = function()
+                return not vim.tbl_contains({ "markdown", "org", "txt" }, vim.bo.filetype) and vim.bo.buftype ~= "prompt"
+            end,
         },
         opts_extend = { "sources.default" }
     },
@@ -333,6 +369,7 @@ require("lazy").setup({
     },
 
     "ziglang/zig.vim",
+
     "https://git.sr.ht/~p00f/clangd_extensions.nvim",
     "rhysd/vim-llvm",
 
@@ -345,6 +382,8 @@ require("lazy").setup({
     },
 
     "Treeniks/isabelle-syn.nvim",
+
+    "R-nvim/R.nvim",
 
     {
         "chomosuke/typst-preview.nvim",
