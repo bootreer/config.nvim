@@ -6,9 +6,8 @@ local set = vim.keymap.set
 -- move highlighted lines up/down
 set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
-
-
 set("n", "J", "mzJ`z")
+
 set("n", "<C-d>", "<C-d>zz")
 set("n", "<C-u>", "<C-u>zz")
 set("n", "n", "nzzzv")
@@ -24,11 +23,12 @@ set("x", "<leader>p", [["_dP]])
 set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to clipboard" })
 set("n", "<leader>Y", [["+Y]], { desc = "Yank to clipboard" })
 
--- set("i", "<C-c>", "<Esc>")
-
 -- TAB to change buffers
 set("n", "<TAB>", ":bnext<CR>", { silent = true })
 set("n", "<S-TAB>", ":bprevious<CR>", { silent = true })
+
+set("n", "<M-j>", "<cmd>cnext<CR>")
+set("n", "<M-k>", "<cmd>cprev<CR>")
 
 -- Better tabbing
 set("v", "<", "<gv")
@@ -63,10 +63,10 @@ set({ 'n', 'i', 't' }, '<C-\\>', function() vim.cmd.ToggleTerm('direction=float'
     { desc = 'Open Floating Terminal' })
 
 -- Remove default keybinds
-vim.keymap.del("n", "grr")
-vim.keymap.del("n", "grn")
 vim.keymap.del("n", "gra")
-vim.keymap.del("n", "gri")
+vim.keymap.del("n", "grn")
+-- vim.keymap.del("n", "grr")
+-- vim.keymap.del("n", "gri")
 
 -- lsp keybinds and on_attach
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -80,13 +80,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', '<leader>ca', require("tiny-code-action").code_action, { desc = 'LSP Code Action', buffer = bufnr })
 
         set('n', 'gd', builtin.lsp_definitions, { desc = 'LSP Goto Definition (Telescope)', buffer = bufnr })
-        set('n', 'gD', vim.lsp.buf.declaration, { desc = 'LSP Goto Declaration', buffer = bufnr })
         set('n', 'gr', builtin.lsp_references, { desc = 'LSP Find References (Telescope)', buffer = bufnr })
+        set('n', 'gD', vim.lsp.buf.declaration, { desc = 'LSP Goto Declaration', buffer = bufnr })
+        set('n', 'gT', vim.lsp.buf.type_definition, { desc = 'LSP Type Definition', buffer = bufnr })
         set('n', 'gi', builtin.lsp_implementations, { desc = 'LSP Goto implementations (Telescope)', buffer = bufnr })
-        set('n', 'gF', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
-        set('n', 'gW', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
 
-        set('n', 'fd', builtin.diagnostics, { desc = 'LSP diagnostics (Telescope)', buffer = bufnr })
+        set('n', '<leader>wd', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
+        set('n', '<leader>ww', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
+
+        set('n', '<leader>fd', builtin.diagnostics, { desc = 'LSP diagnostics (Telescope)', buffer = bufnr })
 
         set('n', '<leader>dk', vim.diagnostic.open_float,
             { desc = 'Diagnostic Open Float', buffer = bufnr })

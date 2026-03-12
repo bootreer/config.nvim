@@ -383,8 +383,6 @@ require("lazy").setup({
 
     "Treeniks/isabelle-syn.nvim",
 
-    "R-nvim/R.nvim",
-
     {
         "chomosuke/typst-preview.nvim",
         ft = "typst",

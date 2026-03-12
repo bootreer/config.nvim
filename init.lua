@@ -55,8 +55,8 @@ vim.o.completeopt = "menuone,noinsert,noselect"
 vim.g.sidescroll = 0
 vim.cmd.colorscheme(theme)
 
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 vim.lsp.inlay_hint.enable(true)
 
 require('lualine').setup {
@@ -66,6 +66,7 @@ require('lualine').setup {
         component_separators = { left = '|', right = '|' },
         disabled_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard' },
         globalstatus = false,
+        -- always_show_tabline = true,
     },
     sections = {
         lualine_a = { 'mode' },
@@ -80,13 +81,10 @@ require('lualine').setup {
         lualine_z = { 'location' }
     },
     tabline = {
-        lualine_a = {},
+        lualine_a = { { "buffers"} },
         lualine_b = {},
-        lualine_c = {
-            {
-                "buffers",
-            },
-        },
+        lualine_c = {},
+        lualine_x = {},
         lualine_y = { 'lsp_status' },
         lualine_z = { "tabs" }
     },
