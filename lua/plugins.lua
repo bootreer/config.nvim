@@ -74,7 +74,7 @@ require("lazy").setup({
         "johnfrankmorgan/whitespace.nvim",
         main = "whitespace-nvim",
         config = function()
-            require('whitespace-nvim').setup({
+            require("whitespace-nvim").setup({
                 ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard', 'isabelle_output' },
                 ignore_terminal = true,
                 return_cursor = true,
@@ -85,10 +85,7 @@ require("lazy").setup({
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
-    {
-        "karb94/neoscroll.nvim",
-        opts = {}
-    },
+
     -- }}}
 
     {
@@ -251,6 +248,7 @@ require("lazy").setup({
 
     {
         "nvim-treesitter/nvim-treesitter",
+        branch = "main",
         build = ":TSUpdate",
     },
 
@@ -356,11 +354,6 @@ require("lazy").setup({
         }
     },
 
-    {
-        "tjdevries/ocaml.nvim",
-        build = ":lua require(\"ocaml\").update()",
-        commit = "8735069ce4267940e1038c7a2942881cf15481ce"
-    },
 
     {
         "mrcjkb/rustaceanvim",
@@ -369,7 +362,6 @@ require("lazy").setup({
     },
 
     "ziglang/zig.vim",
-
     "https://git.sr.ht/~p00f/clangd_extensions.nvim",
     "rhysd/vim-llvm",
 
@@ -432,7 +424,6 @@ require("lazy").setup({
         lazy = false,
         init = function() end,
     },
-
     -- }}}
 
     {

@@ -85,8 +85,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
         set('n', 'gT', vim.lsp.buf.type_definition, { desc = 'LSP Type Definition', buffer = bufnr })
         set('n', 'gi', builtin.lsp_implementations, { desc = 'LSP Goto implementations (Telescope)', buffer = bufnr })
 
-        set('n', '<leader>wd', builtin.lsp_document_symbols, { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
-        set('n', '<leader>ww', builtin.lsp_workspace_symbols, { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
+        set('n', '<leader>wd', function() builtin.lsp_document_symbols({ symbol_width = 80, }) end,
+            { desc = 'LSP Document Symbols (Telescope)', buffer = bufnr })
+        set('n', '<leader>ww', builtin.lsp_workspace_symbols,
+            { desc = 'LSP Workspace Symbols (Telescope)', buffer = bufnr })
 
         set('n', '<leader>fd', builtin.diagnostics, { desc = 'LSP diagnostics (Telescope)', buffer = bufnr })
 

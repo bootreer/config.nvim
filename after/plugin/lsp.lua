@@ -1,4 +1,4 @@
-local _border = "single"
+local _border = "rounded"
 
 vim.diagnostic.config {
     float = { border = _border },
@@ -8,15 +8,6 @@ vim.diagnostic.config {
 require("lspconfig.ui.windows").default_options = {
     border = _border
 }
-
-require("isabelle-lsp").setup({
-    isabelle_path = vim.fn.expand('$HOME/isabelle-lsp/isabelle-dev/bin/isabelle'),
-    unicode_symbols_output = true,
-    unicode_symbols_edits = true,
-    vsplit = true,
-})
-
-require('ocaml').setup()
 
 local servers = {
     clangd = true,
@@ -51,20 +42,23 @@ local servers = {
             return ftype
         end,
     },
+    pyrefly = {
+        enabled = true,
+    },
     pyright = {
+        enabled = false,
         settings = {
             pyright = {
-                -- Using Ruff's import organizer
                 disableOrganizeImports = true,
             },
             python = {
                 analysis = {
-                    -- Ignore all files for analysis to exclusively use Ruff for linting
                     ignore = { '*' },
                 },
             },
         },
     },
+    ols = true,
     ruff = true,
     svelte = true,
     texlab = true,
@@ -74,15 +68,6 @@ local servers = {
         },
     },
     ts_ls = {
-        -- init_options = {
-        --     plugins = {
-        --         {
-        --             name = "@vue/typescript-plugin",
-        --             location = "",
-        --             languages = { "vue" },
-        --         },
-        --     },
-        -- },
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'svelte' },
     },
     vue_ls = true,
@@ -98,8 +83,11 @@ for name, config in pairs(servers) do
         capabilities = capabilities
     }, config)
 
-    vim.lsp.config[name] = config
-    vim.lsp.enable(name)
+    vim.lsp.config(name, config)
+
+    if config.enabled == nil or config.enabled then
+        vim.lsp.enable(name)
+    end
 end
 
 vim.g.rustaceanvim = {

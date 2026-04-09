@@ -1,38 +1,21 @@
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter").setup({
     ensure_installed = {
         "asm",
-        "bash",
-        "c",
         "cpp",
         "lua",
-        "rust",
-        "markdown",
-        "markdown_inline",
+        "haskell",
         "javascript",
+        "ocaml",
         "typescript",
+        "r",
+        "rust",
         "vue",
         "zig",
-        "haskell",
-        "ocaml",
     },
-    sync_install = false,
-    modules = {},
-    ignore_install = {},
     auto_install = true,
     highlight = {
         enable = true,
-        additional_vim_regex_highlighting = false,
         disable = { 'latex' },
-    },
-
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "<C-s>",
-            node_incremental = "<C-s>",
-            scope_incremental = false,
-            node_decremental = "<bs>",
-        },
     },
 })
 

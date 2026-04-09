@@ -1,8 +1,7 @@
 require("plugins")
 require("remap")
 
-local theme = "kanagawa"
-
+local theme = 'kanagawa'
 vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.o.mouse = "a"
@@ -57,8 +56,8 @@ vim.cmd.colorscheme(theme)
 
 -- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.lsp.inlay_hint.enable(true)
 
+vim.lsp.inlay_hint.enable(true)
 require('lualine').setup {
     options = {
         theme = theme,
@@ -66,22 +65,17 @@ require('lualine').setup {
         component_separators = { left = '|', right = '|' },
         disabled_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard' },
         globalstatus = false,
-        -- always_show_tabline = true,
     },
     sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff', 'diagnostics' },
-        lualine_c = {
-            -- 'filename',
-            function()
-                return vim.fn['nvim_treesitter#statusline'](180)
-            end },
+        lualine_c = {},
         lualine_x = { 'encoding', 'fileformat', 'filetype' },
         lualine_y = { 'progress' },
         lualine_z = { 'location' }
     },
     tabline = {
-        lualine_a = { { "buffers"} },
+        lualine_a = { { "buffers" } },
         lualine_b = {},
         lualine_c = {},
         lualine_x = {},
